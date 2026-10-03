@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+.DS_Store
+.venv/
+datasets/
+outputs/
+*.ckpt
+*.pth
+*.h5
+*.hdf5
+*.npz

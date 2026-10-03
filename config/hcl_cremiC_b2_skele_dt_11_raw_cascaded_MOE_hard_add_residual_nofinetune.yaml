@@ -1,0 +1,89 @@
+NAME: 'hcl_cremiC_b2_skele_dt_11_raw_cascaded_MOE_hard_add_residual_nofinetune'
+
+MODEL:
+    model_type: 'superhuman'  # 'mala' or 'superhuman'
+    input_nc: 1
+    # second_input_nc: 3
+    second_input_nc: 1
+    output_nc: 3
+    if_sigmoid: True
+    # for 'mala':
+    init_mode_mala: 'kaiming'
+    # for 'superhuman':
+    if_skip: 'False'
+    filters: 
+        - 28
+        - 36
+        - 48
+        - 64
+        - 80
+    upsample_mode: 'bilinear'  # 'bilinear', 'nearest', 'transpose', 'transposeS'
+    decode_ratio: 1
+    merge_mode: 'add'  # 'add', 'cat'
+    pad_mode: 'zero'  # 'zero', 'replicate'
+    bn_mode: 'async'  # 'sync', 'async'
+    relu_mode: 'elu'  # 'elu', 'relu', 'leaky'
+    init_mode: 'kaiming_normal'  # 'kaiming_normal', 'kaiming_uniform', 'xavier_normal', 'xavier_uniform'
+    
+    pre_train: True
+    trained_gpus: 1
+    pre_train_mode: 'finetune'  # 'finetune', 'extract_feature'
+    # trained_model_name: '2025-07-21--00-36-46_seg_3d_cremiC_b2_skele_dt_11_bce_mse_hcl'
+    # trained_model_id: 366000
+    trained_model_name: 'STAGE1_RUN'  # directory name under TRAIN.save_path
+    trained_model_id: 397000
+    if_skele: True
+    if_dt: True
+    if_cascaded: True
+    if_with_raw: True
+    if_moe: True
+    if_hard: True
+    if_residual: True
+    pruned_model_path: './outputs/models_pruning/cremi-C_pruned_model_ratio_0.3_40000.pth'
+
+TRAIN:
+    resume: False
+    if_valid: True
+    if_seg: True
+    cache_path: './outputs/caches/'
+    save_path: './outputs/models/'
+    pad: 0
+    loss_func: 'WeightedBCELoss'   # 'WeightedBCELoss', 'BCELoss'
+    dt_loss_func: 'WeightedBCELoss'
+    skele_loss_func: 'WeightedBCELoss'
+    opt_type: 'adam'
+    total_iters: 500000
+    warmup_iters: 0
+    base_lr: 0.0001
+    end_lr: 0.0001
+    display_freq: 100
+    valid_freq: 1000
+    save_freq: 1000
+    decay_iters: 100000
+    weight_decay: ~
+    power: 1.5
+
+    batch_size: 2
+    num_workers: 4
+    if_cuda: True
+
+    random_seed: 555  # -1 is none
+
+DATA:
+    dataset_name: 'cremi-C'  # 'snemi3d-ac3', 'cremi-A', 'cremi'
+    valid_dataset: 'cremi-C'  # 20240513
+    train_split: 100
+    test_split: 25
+    data_folder: './datasets/'
+    padding: 20
+    shift_channels: ~
+    if_dilate: True
+    if_scale_aug: False
+    if_filp_aug: True
+    if_rotation_aug: True
+    if_intensity_aug: True
+    if_elastic_aug: True
+
+TEST:
+    pad: 0
+    model_name: '2021-04-24--13-18-01_seg_3d_ac4_data80'
